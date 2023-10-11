@@ -1,0 +1,212 @@
+<com.sothree.slidinguppanel.SlidingUpPanelLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/slidingPanelLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    app:umanoDragView="@id/slide_layout"
+    app:umanoPanelHeight="210dp">
+
+
+    <RelativeLayout
+        android:id="@+id/back_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <com.naver.maps.map.MapView
+            android:id="@+id/map"
+            android:name="com.naver.maps.map.MapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp" />
+        <RelativeLayout
+            android:id="@+id/search_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:padding="16dp">
+
+            <EditText
+                android:id="@+id/searchEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="장소 검색"
+                android:backgroundTint="@color/white"/>
+
+            <Button
+                android:id="@+id/searchButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/searchEditText"
+                android:text="검색" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:padding="16dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="16dp">
+
+                <Button
+                    android:id="@+id/btnFilter1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:text="유아식기"
+
+                    android:layout_marginEnd="8dp" />
+
+                <Button
+                    android:id="@+id/btnFilter2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:text="놀이방"
+
+                    android:layout_marginEnd="8dp" />
+
+                <Button
+                    android:id="@+id/btnFilter3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:text="경사로"
+
+                    android:layout_marginEnd="8dp" />
+            </LinearLayout>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/slide_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- 이미지뷰, 텍스트뷰 3개 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:padding="16dp">
+
+                <ImageView
+                    android:id="@+id/iconImageView"
+                    android:layout_width="120dp"
+                    android:layout_height="150dp"
+                    android:src="@drawable/white"
+                    android:scaleType="centerInside"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="TODO" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginStart="16dp">
+
+                    <TextView
+                        android:id="@+id/titleTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:textAppearanceSmall"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:text="" />
+
+                    <TextView
+                        android:id="@+id/addressTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:textAppearanceSmall"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:textAlignment="textStart"
+                        android:text="" />
+
+                    <TextView
+                        android:id="@+id/phoneNumberTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:textAppearanceSmall"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:textAlignment="textStart"
+                        android:text="주소" />
+
+                    <TextView
+                        android:id="@+id/OptionTextView1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:textAppearanceSmall"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:textAlignment="textStart"
+                        android:text="" />
+
+                    <TextView
+                        android:id="@+id/OptionTextView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:textAppearanceSmall"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:textAlignment="textStart"
+                        android:text="OptionTextView" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- 평점과 RatingBar -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/ratingResultText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="평점"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+                <RatingBar
+                    android:id="@+id/ratingBarResult"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:progressTint="#C11515"
+                    android:numStars="0"
+                    android:stepSize="1.0"
+                    android:layout_marginStart="8dp" />
+
+            </LinearLayout>
+
+            <!-- 리뷰하기 버튼 -->
+            <Button
+                android:id="@+id/myButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="리뷰하기"
+                android:layout_gravity="center_horizontal" />
+
+
+
+            <ListView
+                android:id="@+id/listView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="16dp"
+                android:layout_below="@+id/myButton"
+                android:transcriptMode="alwaysScroll" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>

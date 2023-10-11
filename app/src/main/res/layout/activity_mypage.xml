@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="-8dp">
+
+    <Button
+        android:id="@+id/update_button"
+        android:layout_width="172dp"
+        android:layout_height="53dp"
+        android:layout_marginEnd="32dp"
+        android:elevation="100dp"
+        android:text="프로필 편집"
+        app:layout_constraintBottom_toBottomOf="@+id/logout_button"
+        app:layout_constraintEnd_toStartOf="@+id/logout_button"
+        app:layout_constraintHorizontal_bias="0.526"
+        app:layout_constraintStart_toStartOf="@+id/introduction_view"
+        app:layout_constraintTop_toTopOf="@+id/logout_button"
+        app:layout_constraintVertical_bias="0.5" />
+
+    <Button
+        android:id="@+id/logout_button"
+        android:layout_width="172dp"
+        android:layout_height="53dp"
+        android:elevation="100dp"
+        android:text="로그아웃"
+        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintEnd_toEndOf="@+id/introduction_view"
+        app:layout_constraintTop_toBottomOf="@+id/introduction_view" />
+
+    <ImageView
+        android:id="@+id/profile_view"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="80dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/mypage" />
+
+    <TextView
+        android:id="@+id/baby_gender_field"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:text="아기생일"
+        app:layout_constraintStart_toEndOf="@+id/profile_view"
+        app:layout_constraintTop_toBottomOf="@+id/nickname_field" />
+
+    <TextView
+        android:id="@+id/baby_birthday_field"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:text="아기성별"
+        app:layout_constraintStart_toEndOf="@+id/profile_view"
+        app:layout_constraintTop_toBottomOf="@+id/baby_gender_field" />
+
+    <TextView
+        android:id="@+id/nickname_field"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="80dp"
+        android:text="닉네임"
+        app:layout_constraintStart_toEndOf="@+id/profile_view"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/nickname_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="140dp"
+        android:layout_marginEnd="46dp"
+        android:text="닉네임을 정해주세요"
+        android:textAlignment="textStart"
+        app:layout_constraintBaseline_toBaselineOf="@+id/nickname_field"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/nickname_field"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/baby_birthday_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="168dp"
+        android:layout_marginEnd="46dp"
+        android:text="아이의 생일을 입력하세요"
+        android:textAlignment="textStart"
+        app:layout_constraintBaseline_toBaselineOf="@+id/baby_gender_field"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.965"
+        app:layout_constraintStart_toStartOf="@+id/nickname_view"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/baby_gender_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="153dp"
+        android:layout_marginEnd="46dp"
+        android:text="아이의 성별을 입력하세요"
+        android:textAlignment="textStart"
+        app:layout_constraintBaseline_toBaselineOf="@+id/baby_birthday_field"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/baby_birthday_view"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="216dp"
+        android:text="한 줄 소개📝"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/introduction_view"
+        android:layout_width="334dp"
+        android:layout_height="57dp"
+        android:layout_marginStart="45dp"
+        android:layout_marginTop="252dp"
+        android:layout_marginEnd="45dp"
+        android:text="씩씩한 3세 남아와 함께 사는 인천맘입니다~! 함께 소통해요~~"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.538"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button5"
+        android:layout_width="match_parent"
+        android:layout_height="95dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="40dp"
+        android:backgroundTint="#FFFFFFFF"
+        android:gravity="center"
+        android:text="위치기반서비스 이용약관"
+        android:textAlignment="center"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="95dp"
+        android:layout_marginTop="384dp"
+        android:layout_marginBottom="70dp"
+        android:backgroundTint="#FFFFFFFF"
+        android:text="서비스 이용약관"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/button5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textAlignment="center"
+        android:gravity="center"/>
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="match_parent"
+        android:layout_height="95dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginBottom="70dp"
+        android:backgroundTint="#FFFFFFFF"
+        android:gravity="center"
+        android:text="개인정보 처리방침"
+        android:textAlignment="center"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/button5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/button"
+        app:layout_constraintVertical_bias="0.384" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

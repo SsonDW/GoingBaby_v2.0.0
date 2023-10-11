@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="ExtraText">
+
+    <LinearLayout
+        android:id="@+id/outer_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:ignore="MissingConstraints">
+
+        <LinearLayout
+            android:id="@+id/inner_linear_layout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/ramp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="경사로" />
+
+            <RadioButton
+                android:id="@+id/tableware"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="아기식기" />
+
+            <RadioButton
+                android:id="@+id/babychair"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="아기의자" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/inner_linear_layout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/nursingroom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="수유실" />
+
+            <RadioButton
+                android:id="@+id/playroom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="놀이방" />
+
+            <RadioButton
+                android:id="@+id/automaticdoor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="자동문" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:text="평점 남기기"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/ratingBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reviewtext"
+        app:layout_constraintVertical_bias="0.3" />
+
+    <RatingBar
+        android:id="@+id/ratingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="130dp"
+        android:progressTint="#C11515"
+        android:contentDescription="별점을 선택하세요"
+        android:numStars="5"
+        android:rating="0"
+        android:stepSize="1.0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/textView"
+        app:layout_constraintTop_toBottomOf="@id/textView" />
+
+    <EditText
+        android:id="@+id/reviewtext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="9dp"
+        android:ems="10"
+        android:maxLines="5"
+        android:inputType="textPersonName"
+        android:hint="ex)게시 된 정보와 다른 점이 있나요?\n추가 할 사항이 있나요?\n재방문의 의사가 있나요?\n매장의 특징이 있나요?\n아이가 다칠만 한 요소가 있나요?"
+        app:layout_constraintBottom_toTopOf="@+id/savebutton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/outer_linear_layout"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/savebutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="24dp"
+        android:padding="8dp"
+        android:text="저장하기"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/storeName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="store"
+        app:layout_constraintBottom_toTopOf="@+id/savebutton"
+        app:layout_constraintTop_toBottomOf="@+id/ratingBar"
+        tools:layout_editor_absoluteX="174dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
