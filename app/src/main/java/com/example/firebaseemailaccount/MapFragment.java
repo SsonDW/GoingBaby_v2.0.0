@@ -54,21 +54,25 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private View rootView;  // 클래스 수준에 rootView 변수 선언
 
 
-    private ImageView imageView;
-    private TextView titleTextView;
-    private TextView addressTextView;
-    private TextView phoneTextView;
-    private RatingBar averageRatingBar;
-    private ListView listView;
-    private TextView optionTextView1;
-    private TextView optionTextView2;
+    private ImageView imageView; // 매장 이미지 변수
+    private TextView titleTextView; // 매장 이름 변수
+    private TextView addressTextView; // 매장 주소 변수
+    private TextView phoneTextView; // 매장 번호 변수
+    private RatingBar averageRatingBar; // 매장 평점 변수
+    private ListView listView; // 매장 리뷰
+    private TextView optionTextView1; // 매장 옵션1
+    private TextView optionTextView2; // 매장 옵션2
     private Marker currentMarker;
     private InfoWindow currentInfoWindow;
-
+    private Button reviewButton;
+    private Button searchButton;
+    private EditText searchEditText;
 
     private final ArrayList<Marker> markers = new ArrayList<>();
 
-    public MapFragment() { }
+    public MapFragment() {
+
+    }
 
     @NonNull
     public static MapFragment newInstance() {
@@ -80,7 +84,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.activity_map, container, false); // rootView 변수에 할당
-
         mapView = rootView.findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
@@ -92,14 +95,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         phoneTextView = rootView.findViewById(R.id.phoneNumberTextView);
         optionTextView1 = rootView.findViewById(R.id.OptionTextView1);
         optionTextView2 = rootView.findViewById(R.id.OptionTextView2);
-        Button myButton = rootView.findViewById(R.id.myButton);
-        myButton.setOnClickListener(v -> {
+        averageRatingBar = rootView.findViewById(R.id.ratingBarResult);
+        listView = rootView.findViewById(R.id.listView);
+        reviewButton = rootView.findViewById(R.id.myButton); // 리뷰하기 버튼
+        reviewButton.setOnClickListener(v -> { // 리뷰하기 버튼을 누르면 화면 전환
             Intent intent = new Intent(getActivity(), ReviewActivity.class);
             intent.putExtra("key", titleTextView.getText()); // 여기서 "key"는 데이터를 식별하기 위한 키 값이고, value는 전달하려는 데이터입니다.
             startActivity(intent);
         });
-        averageRatingBar = rootView.findViewById(R.id.ratingBarResult);
-        listView = rootView.findViewById(R.id.listView);
 
         //초기화
         titleTextView.setText("오늘의 PICK"); // 제목 초기화
@@ -124,13 +127,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
             }
         });
-        Button searchButton = rootView.findViewById(R.id.searchButton);
-        EditText searchEditText = rootView.findViewById(R.id.searchEditText);
 
+        searchButton = rootView.findViewById(R.id.searchButton);
+        searchEditText = rootView.findViewById(R.id.searchEditText);
         searchButton.setOnClickListener(v -> {
             String searchQuery = searchEditText.getText().toString();
             searchLocationByName(searchQuery);
         });
+
         Button babyTablewareButton = rootView.findViewById(R.id.btnFilter1);
         babyTablewareButton.setOnClickListener(v -> {
             generateMarker(true); // 아기식기가 있는 장소만 표시
@@ -149,7 +153,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot placeSnapshot : dataSnapshot.getChildren()) {
-                    String placeName = placeSnapshot.child("name").getValue(String.class);
+                    String placeName = placeSnapshot.child("name").getValue(String.class); // placeName은 한글이름, name은 영어이름이여야 모든 데이터를 불러올 수 있다.
 
                     if (placeName != null && placeName.equals(name)) {
                         double latitude = placeSnapshot.child("latitude").getValue(Double.class);
@@ -191,7 +195,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             // FirebaseStorage 접근
                             FirebaseStorage storage = FirebaseStorage.getInstance();
                             // StorageReference 생성
-                            StorageReference storageRef = storage.getReference().child(placeName + ".png");
+                            StorageReference storageRef = storage.getReference().child(placeSnapshot.getKey() + ".png");
                             // 이미지 다운로드 URL 가져오기
                             storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
                                 // 다운로드 URL을 사용하여 이미지 로드 등의 작업 수행
@@ -201,6 +205,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                 Glide.with(requireContext()).load(imageUrl).into(imageView);
                             }).addOnFailureListener(exception -> {
                                 // 이미지 다운로드 실패 시 처리할 작업 수행
+                                System.out.println("Image download Error");
                             });
 
 
@@ -311,9 +316,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         System.out.println("Error");
                     }
 
-                        // ... Continue with the rest of your marker setup, such as setting listeners ...
-                    }
+                    // ... Continue with the rest of your marker setup, such as setting listeners ...
                 }
+            }
 
 
             @Override
@@ -544,7 +549,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
 
         // 마커 생성, 후에 배열로 추가할 수 있도록 변경할 수 있을 것!
-        /*generateMarker("AtwosomePlace");
+        /*
+        generateMarker("AtwosomePlace");
         generateMarker("CGV");
         generateMarker("CityHall");
         generateMarker("HanaBank");
@@ -563,7 +569,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         generateMarker("PantanoDessert");
         generateMarker("SeongkuakMuseum");
         generateMarker("TeenteenHall");
-        generateMarker("JacksonPizza");*/
+        generateMarker("JacksonPizza");
+        */
 
     }
 
