@@ -62,17 +62,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private ListView listView; // 매장 리뷰
     private TextView optionTextView1; // 매장 옵션1
     private TextView optionTextView2; // 매장 옵션2
-    private Marker currentMarker;
-    private InfoWindow currentInfoWindow;
     private Button reviewButton;
-    private Button searchButton;
-    private EditText searchEditText;
-
+    private Button searchButton; // 검색버튼
+    private EditText searchEditText; // 검색할 매장 내용을 입력하는 editText
+    private Button babyTablewareButton; // 아기식기 필터
+    private Button playRoomButton; // 놀이방 필터
+    private Button rampButton; // 경사로 필터
     private final ArrayList<Marker> markers = new ArrayList<>();
 
-    public MapFragment() {
-
-    }
+    public MapFragment() { }
 
     @NonNull
     public static MapFragment newInstance() {
@@ -120,42 +118,24 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         slidingUpPanelLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
-            public void onPanelSlide(View panel, float slideOffset) {
-            }
+            public void onPanelSlide(View panel, float slideOffset) { }
 
             @Override
-            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
-            }
+            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) { }
         });
 
-        searchButton = rootView.findViewById(R.id.searchButton);
-        searchEditText = rootView.findViewById(R.id.searchEditText);
-        searchButton.setOnClickListener(v -> {
-            String searchQuery = searchEditText.getText().toString();
-            searchLocationByName(searchQuery);
-        });
-
-        Button babyTablewareButton = rootView.findViewById(R.id.btnFilter1);
-        babyTablewareButton.setOnClickListener(v -> {
-            generateMarker(true); // 아기식기가 있는 장소만 표시
-        });
         return rootView;
     }
 
-    private void searchLocationByName(String name) {
+    private void generateMarker() {
         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("/GoingBaby/Location");
-
-        // 기존에 표시된 모든 마커 숨기기
-        for (Marker marker : markers) {
-            marker.setMap(null);
-        }
         databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot placeSnapshot : dataSnapshot.getChildren()) {
-                    String placeName = placeSnapshot.child("name").getValue(String.class); // placeName은 한글이름, name은 영어이름이여야 모든 데이터를 불러올 수 있다.
+                    String placeName = placeSnapshot.child("name").getValue(String.class);
 
-                    if (placeName != null && placeName.equals(name)) {
+                    if (placeSnapshot.child("name").exists() && placeSnapshot.child("name").getValue() != null) {
                         double latitude = placeSnapshot.child("latitude").getValue(Double.class);
                         double longitude = placeSnapshot.child("longitude").getValue(Double.class);
 
@@ -165,14 +145,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         newMarker.setTag(placeName);
                         newMarker.setMap(naverMap);
                         markers.add(newMarker);
-
-
-                        // 기존에 표시된 마커 중에서 검색한 마커만 다시 표시
-                        for (Marker marker : markers) {
-                            if (marker.getTag() != null && marker.getTag().toString().equals(name)) {
-                                marker.setMap(naverMap);
-                            }
-                        }
 
                         // 마커 클릭 리스너 등록
                         newMarker.setOnClickListener(marker -> {
@@ -297,10 +269,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, reviewData);
                                         listView.setAdapter(adapter); // listView를 adater랑 연결해서 데이터 넣어주기
                                     }
-                                   /* // 정보 창 열기
-                                    currentInfoWindow = infoWindow;
-                                    infoWindow.open(newMarker);
-                                    currentMarker = newMarker;*/
 
 
                                 } else {
@@ -328,213 +296,56 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
     }
 
-
-
-    public void generateMarker(boolean hasBabyTableware) {
-        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("/GoingBaby/Location");
-
-        // 이전에 생성한 마커들 모두 삭제
+    private void filterMarkers(String searchQuery) {
         for (Marker marker : markers) {
-            marker.setMap(null);
+            if (marker.getTag() != null && marker.getTag().toString().contains(searchQuery)) {
+                // 검색어와 일치하는 마커만 표시
+                marker.setMap(naverMap);
+            } else {
+                // 검색어와 일치하지 않는 마커는 숨김
+                marker.setMap(null);
+            }
         }
-        markers.clear(); // 리스트도 초기화
-        databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot placeSnapshot : dataSnapshot.getChildren()) {
-                    // 장소의 'hasBabyTableware' 필드 값 확인
-                    Boolean placeHasBabyTableware = placeSnapshot.child("hasBabyTableware").getValue(Boolean.class);
-
-                    if (placeHasBabyTableware != null && placeHasBabyTableware == hasBabyTableware) {
-                        // '아기식기'의 유무에 따라 필터링된 장소만 마커 생성
-                        String placeName = placeSnapshot.getKey();
-                        double latitude = placeSnapshot.child("latitude").getValue(Double.class);
-                        double longitude = placeSnapshot.child("longitude").getValue(Double.class);
-
-                        // 마커 생성 및 표시
-                        LatLng newLatLng = new LatLng(latitude, longitude);
-                        Marker newMarker = new Marker();
-                        newMarker.setPosition(newLatLng);
-                        newMarker.setTag(placeName);
-                        newMarker.setMap(naverMap);
-
-                        markers.add(newMarker); // 리스트에 마커 추가
-
-                        // 아기식기 유무에 따라 필터링된 마커만 지도에 표시
-                        if (placeHasBabyTableware == hasBabyTableware) {
-                            newMarker.setMap(naverMap);
-                        }
-                        // 마커 클릭 리스너 등록
-                        newMarker.setOnClickListener(marker -> {
-                            // 마커 클릭 시 동작할 내용 작성
-                            titleTextView.setText(String.valueOf(placeSnapshot.child("name").getValue()));
-                            phoneTextView.setText(String.valueOf(placeSnapshot.child("PhoneNumber").getValue()));
-                            addressTextView.setText(String.valueOf(placeSnapshot.child("Address").getValue()));
-
-                            // 경사로, 아기식기, 아기용품 등등 관련 정보 표시
-                            String optionText1 = placeSnapshot.child("NursingRoom").getValue() + " "
-                                    + placeSnapshot.child("BabyChair").getValue() + " "
-                                    + placeSnapshot.child("BabyTableware").getValue();
-                            optionTextView1.setText(optionText1);
-                            String optionText2 = placeSnapshot.child("AutomaticDoors").getValue() + " "
-                                    + placeSnapshot.child("PlayRoom").getValue() + " "
-                                    + placeSnapshot.child("Ramp").getValue();
-                            optionTextView2.setText(optionText2);
-                            averageRatingBar.setRating(0.0f);
-
-                            // FirebaseStorage 접근
-                            FirebaseStorage storage = FirebaseStorage.getInstance();
-                            // StorageReference 생성
-                            StorageReference storageRef = storage.getReference().child(placeName + ".png");
-                            // 이미지 다운로드 URL 가져오기
-                            storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                                // 다운로드 URL을 사용하여 이미지 로드 등의 작업 수행
-                                String imageUrl = uri.toString();
-                                // 이미지를 imageView에 설정하거나 처리하는 등의 작업 수행
-                                // Glide 등의 라이브러리를 사용하여 이미지 로드를 쉽게 처리할 수 있습니다.
-                                Glide.with(requireContext()).load(imageUrl).into(imageView);
-                            }).addOnFailureListener(exception -> {
-                                // 이미지 다운로드 실패 시 처리할 작업 수행
-                            });
-
-
-                            // Firestore 인스턴스 가져오기
-                            FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-                            // "Reviews" 컬렉션 참조
-                            CollectionReference reviewsCollectionRef = db.collection("Reviews");
-
-                            // storeName이 "cgv"인 데이터 필터링
-                            Query query = reviewsCollectionRef.whereEqualTo("storeName", titleTextView.getText().toString());
-
-                            // 쿼리 실행
-                            query.get().addOnCompleteListener(task -> {
-                                if (task.isSuccessful()) {
-                                    // 쿼리 결과 가져오기
-                                    QuerySnapshot querySnapshot = task.getResult();
-
-                                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
-                                        double totalRating = 0.0;
-                                        int count = 0;
-                                        ArrayList<String> reviewData = new ArrayList<>();
-                                        String Info[] = new String[6]; // 옵션 표시 배열
-                                        for (int i = 0; i < Info.length; i++) {
-                                            Info[i] = "";
-                                        }
-
-                                        // 모든 문서의 rating 값을 합산하고 문서 개수를 세기
-                                        for (DocumentSnapshot documentSnapshot : querySnapshot.getDocuments()) {
-                                            // 평균 평점 계산
-                                            double ratingDouble = documentSnapshot.getDouble("rating");
-                                            totalRating += ratingDouble;
-                                            count++;
-                                            // 경사로, 아기식기등 옵션 사항 표시하기
-                                            int info_count = 0; // 옵션 표시 배열 길이
-                                            if (Boolean.TRUE.equals(documentSnapshot.getBoolean("hasNursingRoom"))) {
-                                                Info[info_count++] = "수유실O, ";
-                                            } else {
-                                                Info[info_count++] = "수유실X, ";
-                                            }
-                                            if (Boolean.TRUE.equals(documentSnapshot.getBoolean("hasBabyChair"))) {
-                                                Info[info_count++] = "아기의자O, ";
-                                            } else {
-                                                Info[info_count++] = "아기의자X, ";
-                                            }
-                                            if (Boolean.TRUE.equals(documentSnapshot.getBoolean("hasTableWare"))) {
-                                                Info[info_count++] = "아기식기O";
-                                            } else {
-                                                Info[info_count++] = "아기식기X";
-                                            }
-                                            if (Boolean.TRUE.equals(documentSnapshot.getBoolean("hasAutomaticDoor"))) {
-                                                Info[info_count++] = "자동문O, ";
-                                            } else {
-                                                Info[info_count++] = "자동문X, ";
-                                            }
-                                            if (Boolean.TRUE.equals(documentSnapshot.getBoolean("hasPlayRoom"))) {
-                                                Info[info_count++] = "놀이방O, ";
-                                            } else {
-                                                Info[info_count++] = "놀이방X, ";
-                                            }
-                                            if (Boolean.TRUE.equals(documentSnapshot.getBoolean("hasRamp"))) {
-                                                Info[info_count++] = "경사로O";
-                                            } else {
-                                                Info[info_count++] = "경사로X";
-                                            }
-
-                                            StringBuilder InfoOption = new StringBuilder();
-                                            for (int j = 0; j < info_count; j++) {
-                                                InfoOption.append(Info[j]);
-                                                if (j == 2) {
-                                                    InfoOption.append("\n");
-                                                }
-                                            }
-                                            InfoOption.append("\n\n");
-                                            InfoOption.append("<리뷰내용>\n");
-                                            InfoOption.append(documentSnapshot.getString("reviewText"));
-                                            InfoOption.append("\n");
-                                            reviewData.add(InfoOption.toString());
-                                        }
-
-                                        // 평균 계산
-                                        if (count > 0) {
-                                            double averageRating = totalRating / count;
-                                            float averageRatingFloat = (float) averageRating;
-
-                                            // averageRatingBar에 평균값 설정
-                                            averageRatingBar.setRating(averageRatingFloat);
-                                        }
-                                        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, reviewData);
-                                        listView.setAdapter(adapter); // listView를 adater랑 연결해서 데이터 넣어주기
-                                    }
-                                   /* // 정보 창 열기
-                                    currentInfoWindow = infoWindow;
-                                    infoWindow.open(newMarker);
-                                    currentMarker = newMarker;*/
-
-
-                                } else {
-                                    // 쿼리 실패 시 동작
-                                    Log.e("ReviewActivity", "Error getting reviews", task.getException());
-                                }
-                            });
-
-                            return true;
-                        });
-                    } else {
-                        // 데이터가 없는 경우 처리
-                        System.out.println("Error");
-                    }
-                }
-            }
-
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // 에러 처리
-            }
-        });
-
     }
 
+    private void showAllMarkers() {
+        for (Marker marker : markers) {
+            // 모든 마커를 표시
+            marker.setMap(naverMap);
+        }
+    }
 
+    private void filterMarkersByOption(String optionKey, boolean optionValue) {
+        for (Marker marker : markers) {
+            String placeName = (String) marker.getTag();
+
+            DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("/GoingBaby/Location");
+            databaseRef.orderByChild("name").equalTo(placeName).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot placeSnapshot : dataSnapshot.getChildren()) {
+                        boolean option = placeSnapshot.child(optionKey).getValue(Boolean.class);
+
+                        // Option 값이 true이면서 해당 옵션 필터가 true일 때 해당 마커를 표시
+                        if (option == optionValue) {
+                            marker.setMap(naverMap);
+                        } else {
+                            marker.setMap(null);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    // 에러 처리
+                }
+            });
+        }
+    }
 
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
         this.naverMap = naverMap;
-
-        Button babyTablewareButton = rootView.findViewById(R.id.btnFilter1);
-
-        babyTablewareButton.setOnClickListener(v -> {
-            generateMarker(true); // 아기식기가 있는 장소만 표시
-        });
-
-        Button searchButton = rootView.findViewById(R.id.searchButton);
-        EditText searchEditText = rootView.findViewById(R.id.searchEditText); // searchEditText 초기화
-
-        searchButton.setOnClickListener(v -> {
-            String searchQuery = searchEditText.getText().toString();
-            searchLocationByName(searchQuery);
-        });
 
         // 초기 위치 설정
         double initialLatitude = 37.5828483; // 초기 위도(한성대)
@@ -546,31 +357,39 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 15 // 줌 레벨 설정
         ));
 
+        generateMarker();
 
+        //필터 기능 추가
+        searchButton = rootView.findViewById(R.id.searchButton);
+        searchEditText = rootView.findViewById(R.id.searchEditText); // searchEditText 초기화
+        babyTablewareButton = rootView.findViewById(R.id.btnFilter1);
+        playRoomButton = rootView.findViewById(R.id.btnFilter2);
+        rampButton = rootView.findViewById(R.id.btnFilter3);
 
-        // 마커 생성, 후에 배열로 추가할 수 있도록 변경할 수 있을 것!
-        /*
-        generateMarker("AtwosomePlace");
-        generateMarker("CGV");
-        generateMarker("CityHall");
-        generateMarker("HanaBank");
-        generateMarker("HansungUniversity");
-        generateMarker("HansungUniversityStation");
-        generateMarker("Lotteria");
-        generateMarker("Napoleon");
-        generateMarker("SFCMall");
-        generateMarker("Sioldon");
-        generateMarker("Starbucks");
-        generateMarker("Sungnyemun");
-        generateMarker("ThePlaza");
-        generateMarker("BurgerPark");
-        generateMarker("CafeTravel");
-        generateMarker("Cheongkimyeonga");
-        generateMarker("PantanoDessert");
-        generateMarker("SeongkuakMuseum");
-        generateMarker("TeenteenHall");
-        generateMarker("JacksonPizza");
-        */
+        searchButton.setOnClickListener(v -> {
+            String searchQuery = searchEditText.getText().toString().trim();
+
+            if (!searchQuery.isEmpty()) {
+                // 검색어가 비어 있지 않은 경우
+                filterMarkers(searchQuery);
+            } else {
+                // 검색어가 비어 있는 경우
+                // 모든 마커를 표시
+                showAllMarkers();
+            }
+        });
+
+        babyTablewareButton.setOnClickListener(v -> {
+            filterMarkersByOption("hasBabyTableware", true);
+        });
+
+        playRoomButton.setOnClickListener(v -> {
+            filterMarkersByOption("hasPlayRoom", true);
+        });
+
+        rampButton.setOnClickListener(v -> {
+            filterMarkersByOption("hasRamp", true);
+        });
 
     }
 
